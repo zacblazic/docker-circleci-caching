@@ -7,6 +7,12 @@ set -ex
 # IMAGE_NAME='zacblazic/app'
 # CIRCLE_BRANCH='master'
 
+configure_aws_cli() {
+  aws --version
+  aws configure set default.region $AWS_REGION
+  aws configure set default.output json
+}
+
 restore_image() {
   eval $(aws ecr get-login --region $AWS_REGION)
   docker pull $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_NAME-cache:$CIRCLE_BRANCH | cat
@@ -16,4 +22,5 @@ restore_image() {
   # fi
 }
 
+configure_aws_cli
 restore_image
