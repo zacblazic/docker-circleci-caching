@@ -1,0 +1,20 @@
+---
+machine:
+  pre:
+    - curl -sSL https://s3.amazonaws.com/circle-downloads/install-circleci-docker.sh | bash -s -- 1.10.0
+  environment:
+    AWS_ACCOUNT_ID: 185075373143
+    AWS_REGION: 'us-east-1'
+    IMAGE_NAME: 'zacblazic/app'
+  services:
+    - docker
+
+dependencies:
+  pre:
+    - docker version
+    - docker info
+    - ./restore-cache.sh
+  override:
+    - docker build -t $IMAGE_NAME .
+  post:
+    - ./save-cache.sh
